@@ -93,6 +93,7 @@ Puedes usar una pila auxiliar.
 */
 
 void copia_pila(Stack* P1, Stack* P2) {
+
    Stack* aux = create_stack();
    void *dato;
    while((dato = pop(P1)) != NULL){
@@ -114,21 +115,25 @@ paraéntesis balanceados. Retorna 1 si están balanceados,
 
 int parentesisBalanceados(char *cadena) {
    Stack* P = create_stack();
-   for(int i = 0; i < strlen(cadena); i++){
-      if(cadena[i] == '(' || cadena[i] == '{' || cadena[i] == "[" ){
-         push(P,&cadena[i]);
-   }
-   else if(cadena[i] == ')' || cadena[i] == '}' || cadena[i] == ']'){
-      if(top(P) == NULL){
-         return 0;
+
+   for (int i = 0; i < strlen(cadena); i++) {
+      if (cadena[i] == '(' || cadena[i] == '{' || cadena[i] == '[') {
+         push(P, &cadena[i]); 
+      } 
+      else if (cadena[i] == ')' || cadena[i] == '}' || cadena[i] == ']') {
+         if (top(P) == NULL) {  // Verificamos si la pila está vacía
+            return 0;
+         }
+         
+         char *parentesis = (char*)top(P);
+         if ((*parentesis == '(' && cadena[i] != ')') || 
+            (*parentesis == '{' && cadena[i] != '}') ||
+            (*parentesis == '[' && cadena[i] != ']')) {
+            return 0;
+         }
+         pop(P);
       }
-      char *parentesis = (char*)top(P);
-      if((cadena[i] == ')' && *parentesis != '(') || (cadena[i] == '}' && *parentesis != '{') || (cadena[i] == ']' && *parentesis != '[')){
-         return 0;
-      }
-      pop(P);
    }
-      return 1;
-   }
+   return (top(P) == NULL);
 }
 
